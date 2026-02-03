@@ -84,6 +84,7 @@ pipeline{
                     # Push a master usando credenciales
                     git push origin master
                 '''
+                
                 }
             }
         }
