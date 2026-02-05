@@ -72,6 +72,9 @@ pipeline{
                     git config user.email "jenkins@oscarnappo.es"
                     git config user.name "Jenkins CI"
 
+                    git config credential.helper 'cache --timeout=30'
+                    printf "protocol=https\nhost=github.com\nusername=x-access-token\npassword=${GIT_TOKEN}\n\n" | git credential approve
+
                     # Aseguramos que tenemos la última versión de master
                     git fetch origin master
     
