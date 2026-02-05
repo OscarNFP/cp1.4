@@ -20,7 +20,7 @@ pipeline{
                 sh '''
                     sam build
                     sam validate --region us-east-1
-                    sam deploy
+                    sam deploy --resolve-s3
                 '''
             }
         } 
@@ -33,8 +33,9 @@ pipeline{
                     --stack-name todo-list-aws \
                     --query 'Stacks[0].Outputs[?OutputKey==`BaseUrlApi`].OutputValue' \
                     --region us-east-1 --output text)
-                    echo "La URL base de la API es: $BASE_URL"
+                    export BASE_URL
                     pytest --junitxml=result-rest.xml pytest -m test/integration
+
                 '''
                 junit 'result-rest.xml'
             }
@@ -52,6 +53,9 @@ pipeline{
                     git config user.email "jenkins@oscarnappo.es"
                     git config user.name "Jenkins CI"
 
+                    git config credential.helper 'cache --timeout=30'
+                    printf "protocol=https\nhost=github.com\nusername=x-access-token\npassword=${GIT_TOKEN}\n\n" | git credential approve
+
                     # Aseguramos que tenemos la última versión de master
                     git fetch origin master
     
@@ -64,6 +68,8 @@ pipeline{
                     # Push a master usando credenciales
                     git push origin master
                 '''
+
+                }
             }
         }
     }
