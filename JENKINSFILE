@@ -53,7 +53,7 @@ pipeline{
                     --stack-name todo-list-aws \
                     --query 'Stacks[0].Outputs[?OutputKey==`BaseUrlApi`].OutputValue' \
                     --region us-east-1 --output text)
-                    echo "La URL base de la API es: $BASE_URL"
+                    export BASE_URL
                     pytest --junitxml=result-rest.xml test/integration
                 '''
                 junit 'result-rest.xml'

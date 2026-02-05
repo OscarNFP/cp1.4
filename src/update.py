@@ -4,7 +4,6 @@ import decimalencoder
 import todoList
 
 
-
 def update(event, context):
     data = json.loads(event['body'])
     if 'text' not in data or 'checked' not in data:
