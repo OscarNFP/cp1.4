@@ -81,11 +81,12 @@ pipeline{
                     # Cambiamos a master
                     git checkout master
     
+                    # linear master local con master remoto
+                    git reset --hard origin/master
+
                     # Hacemos merge de la rama develop
                     git merge origin/develop --no-ff -m "Merge automático desde pipeline"
                     
-                    # Rebase para mantener un historial limpio
-                    git pull --rebase origin master
 
                     # Push a master usando credenciales
                     git push origin master
