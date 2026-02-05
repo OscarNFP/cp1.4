@@ -20,7 +20,6 @@ pipeline{
                 sh '''
                     sam build
                     sam validate --region us-east-1
-                    # Deploy al stack usando los parámetros definidos en samconfig.toml
                     sam deploy --resolve-s3 --no-fail-on-empty-changeset
                 '''
             }
@@ -40,6 +39,11 @@ pipeline{
                 '''
                 junit 'result-rest.xml'
             }
+        }
+        post { 
+            always { 
+                cleanWs()
+            } 
         }
     }
 }
