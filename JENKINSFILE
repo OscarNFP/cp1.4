@@ -34,7 +34,7 @@ pipeline{
                     --query 'Stacks[0].Outputs[?OutputKey==`BaseUrlApi`].OutputValue' \
                     --region us-east-1 --output text)
                     export BASE_URL
-                    pytest --junitxml=result-rest.xml pytest -m test/integration
+                    pytest --junitxml=result-rest.xml -m "TEST_REST_CD" test/integration
 
                 '''
                 junit 'result-rest.xml'
