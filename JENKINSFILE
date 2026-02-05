@@ -64,7 +64,10 @@ pipeline{
     
                     # Hacemos merge de la rama develop
                     git merge origin/develop --no-ff -m "Merge automático desde pipeline"
-    
+                    
+                    # Rebase para mantener un historial limpio
+                    git pull --rebase origin master
+
                     # Push a master usando credenciales
                     git push origin master
                 '''
