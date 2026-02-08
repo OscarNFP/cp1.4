@@ -84,6 +84,9 @@ pipeline{
             steps{
                 unstash 'code'
                 sh '''
+                    echo $WORKSPACE
+                    whoami
+                    hostname
                     sam build
                     sam validate --region us-east-1
                     sam deploy --config-env staging --resolve-s3 --no-fail-on-empty-changeset
@@ -116,6 +119,9 @@ pipeline{
                 unstash 'api-url'
 
                 sh '''
+                    echo $WORKSPACE
+                    whoami
+                    hostname
                     BASE_URL=$(cat api_url.txt)
                     export BASE_URL
                     pytest --junitxml=result-rest.xml test/integration
@@ -135,6 +141,10 @@ pipeline{
                 unstash 'code'
                 withCredentials([string(credentialsId: 'github-token', variable: 'GIT_TOKEN')]) {
                 sh '''
+                    echo $WORKSPACE
+                    whoami
+                    hostname
+                    
                     git config user.email "jenkins@oscarnappo.es"
                     git config user.name "Jenkins CI"
 
