@@ -158,7 +158,7 @@ pipeline{
                     git fetch origin master
 
                     # Creamos / reseteamos master desde origin/master
-                    git checkout -B master origin/master
+                    git checkout -B master FETCH_HEAD
     
                     # Merge desde develop
                     git merge origin/develop --no-ff -m "Merge automático desde pipeline"
