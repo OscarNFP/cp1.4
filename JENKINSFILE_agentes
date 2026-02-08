@@ -28,6 +28,9 @@ pipeline{
             steps{
                 unstash 'code'
                 sh '''
+                    echo $WORKSPACE
+                    whoami
+                    hostname
                     sam build
                     sam validate --region us-east-1
                     sam deploy --config-env production --resolve-s3 --no-fail-on-empty-changeset
@@ -61,6 +64,9 @@ pipeline{
                 unstash 'api-url'
 
                 sh '''
+                    echo $WORKSPACE
+                    whoami
+                    hostname
                     BASE_URL=$(cat api_url.txt)
                     export BASE_URL
                     pytest --junitxml=result-rest.xml test/integration
