@@ -25,6 +25,7 @@ pipeline{
             }
         } 
 
+        // Etapa de pruebas de integración
         stage('Rest'){
             steps{
                 sh '''
@@ -38,6 +39,38 @@ pipeline{
 
                 '''
                 junit 'result-rest.xml'
+            }
+        }
+        // Etapa de promoción a master 
+        stage('Promote'){
+            steps{
+
+                withCredentials([string(credentialsId: 'github-token', variable: 'GIT_TOKEN')]) {
+                sh '''
+                    git config user.email "jenkins@oscarnappo.es"
+                    git config user.name "Jenkins CI"
+
+                    git config credential.helper 'cache --timeout=30'
+                    printf "protocol=https\nhost=github.com\nusername=x-access-token\npassword=${GIT_TOKEN}\n\n" | git credential approve
+
+                    # Aseguramos que tenemos la última versión de master
+                    git fetch origin master
+    
+                    # Cambiamos a master
+                    git checkout master
+    
+                    # Igualamos master local (EC2) con master remoto (GitHub)
+                    git reset --hard origin/master
+
+                    # Hacemos merge de la rama develop
+                    git merge origin/develop --no-ff -m "Merge automático desde pipeline"
+                    
+
+                    # Push a master usando credenciales almacenadas en Jenkins Secrets
+                    git push origin master
+                '''
+
+                }
             }
         }
     }
