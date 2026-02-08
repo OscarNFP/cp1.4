@@ -10,7 +10,11 @@ pipeline{
             // Realizamos el checkout del SCM configurado en Jenkins
             steps{
                 checkout scm
-                sh 'echo $WORKSPACE'
+                sh '''
+                echo "Descargando configuración de despliegue SAM..."
+                wget https://raw.githubusercontent.com/OscarNFP/todo-list-aws-config/refs/heads/production/samconfig.toml
+                echo $WORKSPACE
+                '''
             }
         }
         
