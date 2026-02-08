@@ -12,6 +12,9 @@ pipeline{
             steps{
                 checkout scm
                 sh '''
+                    echo "Descargando configuración de despliegue SAM..."
+                    wget https://raw.githubusercontent.com/OscarNFP/todo-list-aws-config/refs/heads/staging/samconfig.toml
+                    echo $WORKSPACE
                     echo $WORKSPACE
                     whoami
                     hostname
