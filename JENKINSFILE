@@ -20,7 +20,7 @@ pipeline{
                 sh '''
                     sam build
                     sam validate --region us-east-1
-                    sam deploy --resolve-s3 --no-fail-on-empty-changeset
+                    sam deploy --config-env production --resolve-s3 --no-fail-on-empty-changeset
                 '''
             }
         } 
@@ -30,7 +30,7 @@ pipeline{
                 sh '''
                     # Obtenemos la URL base del API Gateway desde los outputs del stack de CloudFormation
                     BASE_URL=$(aws cloudformation describe-stacks \
-                    --stack-name todo-list-aws \
+                    --stack-name todo-list-aws-production \
                     --query 'Stacks[0].Outputs[?OutputKey==`BaseUrlApi`].OutputValue' \
                     --region us-east-1 --output text)
                     export BASE_URL
