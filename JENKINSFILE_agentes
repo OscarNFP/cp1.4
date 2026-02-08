@@ -1,0 +1,102 @@
+pipeline{
+    // Cualquier agente disponible para ejecutar el pipeline
+    agent any
+
+    // Evitar el checkout automático del código fuente
+    options { skipDefaultCheckout() }
+
+    stages{
+
+        // Etapa para obtener el código fuente
+        stage('GET CODE'){
+            steps{
+                checkout scm
+                sh '''
+                    echo $WORKSPACE
+                    whoami
+                    hostname
+                '''
+                stash name:'code', includes:'**'
+                cleanWs()
+            }
+        }
+
+        // Etapa de despliegue SAM
+        stage('Deploy'){
+            steps{
+                unstash 'code'
+                sh '''
+                    sam build
+                    sam validate --region us-east-1
+                    sam deploy --config-env production --resolve-s3 --no-fail-on-empty-changeset
+                '''
+
+                // Guardo el resultado en un fichero de texto
+                // para luego poder usarla en la siguiente etapa.
+                // Finalmente se eliminará del WorkSpace 
+                sh '''
+                    aws cloudformation describe-stacks \
+                        --stack-name todo-list-aws-production \
+                        --query 'Stacks[0].Outputs[?OutputKey==`BaseUrlApi`].OutputValue' \
+                        --region us-east-1 --output text > api_url.txt
+                '''
+
+                stash name: 'api-url', includes: 'api_url.txt'
+            }
+            post {
+                always {
+                    cleanWs(deleteDirs: true, disableDeferredWipeout: true)
+                }
+            }
+        }
+        
+        // Etapa de pruebas de integración
+        stage('Rest'){
+            agent { label 'agent1' }
+            steps{
+                unstash 'code'
+                unstash 'api-url'
+
+                sh '''
+                    BASE_URL=$(cat api_url.txt)
+                    export BASE_URL
+                    pytest --junitxml=result-rest.xml test/integration
+                '''
+                junit 'result-rest.xml'
+            }
+            post {
+                always {
+                    cleanWs(deleteDirs: true, disableDeferredWipeout: true)
+                }
+            }
+        }
+
+        // Etapa de promoción a producción
+        stage('Promote'){
+            steps{
+                unstash 'code'
+                withCredentials([string(credentialsId: 'github-token', variable: 'GIT_TOKEN')]) {
+                sh '''
+                    git config user.email "jenkins@oscarnappo.es"
+                    git config user.name "Jenkins CI"
+
+                    git config credential.helper 'cache --timeout=30'
+                    printf "protocol=https\nhost=github.com\nusername=x-access-token\npassword=${GIT_TOKEN}\n\n" | git credential approve
+
+                    git fetch origin master
+                    git checkout master
+                    git reset --hard origin/master
+                    git merge origin/develop --no-ff -m "Merge automático desde pipeline"
+                    git push origin master
+                '''
+                }
+            }
+        }
+    }
+
+    post { 
+        always { 
+            cleanWs()
+        } 
+    }
+}
