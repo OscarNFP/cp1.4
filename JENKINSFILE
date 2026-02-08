@@ -45,6 +45,7 @@ pipeline{
             }
         } 
 
+        // Etapa de pruebas de integración
         stage('Rest'){
             steps{
                 sh '''
@@ -59,13 +60,10 @@ pipeline{
                 junit 'result-rest.xml'
             }
         }
-
-//Por aquí me quedé. Hay que revisarlo
+        
+        // Etapa de promoción a master 
         stage('Promote'){
             steps{
-                //build job: 'PIPELINE-FULL-CD'
-                // mergeo a master con gitignore de JENKINSFILE para que no machaque el pipeline de CI en el reto 2 con el CD
-
 
                 withCredentials([string(credentialsId: 'github-token', variable: 'GIT_TOKEN')]) {
                 sh '''
@@ -81,14 +79,14 @@ pipeline{
                     # Cambiamos a master
                     git checkout master
     
-                    # linear master local con master remoto
+                    # Igualamos master local (EC2) con master remoto (GitHub)
                     git reset --hard origin/master
 
                     # Hacemos merge de la rama develop
                     git merge origin/develop --no-ff -m "Merge automático desde pipeline"
                     
 
-                    # Push a master usando credenciales
+                    # Push a master usando credenciales almacenadas en Jenkins Secrets
                     git push origin master
                 '''
 
