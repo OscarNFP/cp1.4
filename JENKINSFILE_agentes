@@ -108,6 +108,7 @@ pipeline{
         
         // Etapa de pruebas de integración
         stage('Rest'){
+            agent { label 'agent1' }
             steps{
                 unstash 'code'
                 unstash 'api-url'
