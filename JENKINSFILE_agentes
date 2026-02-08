@@ -18,7 +18,7 @@ pipeline{
                 '''
                 // Podemos guardar el código fuente y ficheros ocultos concretros o bien todos los ficheros ocultos
                 // usando la opción "useDefaultExcludes: false" o bien usando '**/.*' para incluir todos los ficheros ocultos.
-                stash name:'code', includes:'.git/**'
+                stash name:'code', includes:'**', useDefaultExcludes: false
                 cleanWs()
             }
         }
