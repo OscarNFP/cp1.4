@@ -15,9 +15,8 @@ pipeline{
                 wget https://raw.githubusercontent.com/OscarNFP/todo-list-aws-config/refs/heads/production/samconfig.toml
                 echo $WORKSPACE
                 '''
-                
             }
-        }
+        }  
         
         //Etapa de despliegue SAM
         stage('Deploy'){
