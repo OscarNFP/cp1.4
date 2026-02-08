@@ -1,4 +1,5 @@
 pipeline{
+    
     // Cualquier agente disponible para ejecutar el pipeline
     agent any
 
