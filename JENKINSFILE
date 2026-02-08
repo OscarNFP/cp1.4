@@ -50,7 +50,7 @@ pipeline{
                 sh '''
                     # Obtenemos la URL base del API Gateway desde los outputs del stack de CloudFormation
                     BASE_URL=$(aws cloudformation describe-stacks \
-                    --stack-name todo-list-aws \
+                    --stack-name todo-list-aws-staging \
                     --query 'Stacks[0].Outputs[?OutputKey==`BaseUrlApi`].OutputValue' \
                     --region us-east-1 --output text)
                     export BASE_URL
