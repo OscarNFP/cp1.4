@@ -70,28 +70,6 @@ pipeline{
                 }
             }
         }
-
-        // Etapa de promoción a producción
-        stage('Promote'){
-            steps{
-                unstash 'code'
-                withCredentials([string(credentialsId: 'github-token', variable: 'GIT_TOKEN')]) {
-                sh '''
-                    git config user.email "jenkins@oscarnappo.es"
-                    git config user.name "Jenkins CI"
-
-                    git config credential.helper 'cache --timeout=30'
-                    printf "protocol=https\nhost=github.com\nusername=x-access-token\npassword=${GIT_TOKEN}\n\n" | git credential approve
-
-                    git fetch origin master
-                    git checkout master
-                    git reset --hard origin/master
-                    git merge origin/develop --no-ff -m "Merge automático desde pipeline"
-                    git push origin master
-                '''
-                }
-            }
-        }
     }
 
     post { 
