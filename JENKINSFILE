@@ -83,6 +83,9 @@ pipeline{
                     # Cambiamos a master
                     git checkout -B master FETCH_HEAD
 
+                    # Declaramos específicamente el driver ours para evitar conflictos (si existen) y mantener los ficheros Jenkinsfile de master
+                    git config merge.ours.driver true
+
                     # Hacemos merge de la rama develop
                     git merge origin/develop --no-ff -m "Merge automático desde pipeline"
                     

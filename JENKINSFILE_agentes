@@ -20,7 +20,7 @@ pipeline{
                     hostname
                 '''
                 // Podemos guardar el código fuente y ficheros ocultos concretros o bien todos los ficheros ocultos
-                // usando la opción "useDefaultExcludes: false" o bien usando '**/.*' para incluir todos los ficheros ocultos.
+                // usando la opción "useDefaultExcludes: false"
                 stash name:'code', includes:'**', useDefaultExcludes: false
                 cleanWs()
             }
@@ -159,6 +159,9 @@ pipeline{
 
                     # Creamos / reseteamos master desde origin/master
                     git checkout -B master FETCH_HEAD
+
+                    # Declaramos específicamente el driver ours para evitar conflictos (si existen) y mantener los ficheros Jenkinsfile de master
+                    git config merge.ours.driver true
     
                     # Merge desde develop
                     git merge origin/develop --no-ff -m "Merge automático desde pipeline"
