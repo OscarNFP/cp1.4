@@ -6,6 +6,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.29] - 2026-02-08
 ### Added
-
 - Versión: Pipeline Multibranch v9 - From Develop
 
