@@ -15,6 +15,8 @@ pipeline{
                     echo $WORKSPACE
                     whoami
                     hostname
+                    echo "Descargando configuración de despliegue SAM..."
+                    wget https://raw.githubusercontent.com/OscarNFP/todo-list-aws-config/refs/heads/staging/samconfig.toml
                 '''
                 // Podemos guardar el código fuente y ficheros ocultos concretros o bien todos los ficheros ocultos
                 // usando la opción "useDefaultExcludes: false"
