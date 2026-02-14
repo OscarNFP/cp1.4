@@ -11,8 +11,6 @@ pipeline{
             steps{
                 checkout scm
                 sh '''
-                echo "Descargando configuración de despliegue SAM..."
-                wget https://raw.githubusercontent.com/OscarNFP/todo-list-aws-config/refs/heads/production/samconfig.toml
                 echo $WORKSPACE
                 '''
             }
@@ -22,8 +20,8 @@ pipeline{
         stage('Deploy'){
             steps{
                 sh '''
-                    sam build
                     sam validate --region us-east-1
+                    sam build
                     sam deploy --config-env production --resolve-s3 --no-fail-on-empty-changeset
                 '''
             }
