@@ -6,5 +6,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.4] - 2026-02-14
 ### Added
-- Versión: Pipeline CI - Reto 4 - Descarga de samconfig.toml desde repositorio externo
+- Versión: Pipeline CI - Reto 4 - Descarga de samconfig.toml desde repositorio externo - Agentes
 
