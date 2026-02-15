@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.5] - 2026-02-14
 ### Added
+- Versión: Pipeline CICD - Reto 5
 
-- Versión: Pipeline CI-CD - Reto 5 - file Jenkinsfile
+
 
