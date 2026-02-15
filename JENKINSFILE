@@ -12,6 +12,8 @@ pipeline{
                 checkout scm
                 sh '''
                 echo $WORKSPACE
+                echo "Descargando configuración de despliegue SAM..."
+                wget https://raw.githubusercontent.com/OscarNFP/todo-list-aws-config/refs/heads/production/samconfig.toml
                 '''
             }
         }  
